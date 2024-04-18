@@ -2,7 +2,6 @@ import "./App.css";
 import { useState } from "react";
 import Music from "./Data/Music";
 import PlaylistData from "./Data/PlaylistData";
-import { calculateNewValue } from "@testing-library/user-event/dist/utils";
 
 function App() {
     const [query, setQuery] = useState("");
