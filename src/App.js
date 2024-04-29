@@ -1,12 +1,15 @@
 import "./App.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Music from "./Data/Music";
-import PlaylistData from "./Data/PlaylistData";
+import fetchData from "./Data/PlaylistData";
+
+const CLIENT_ID = "f06db0cf3a614a20bc1903a4e74670a8";
+const CLIENT_SECRET = "38a44b5c9f81420ea713dd0d1643c033";
 
 function App() {
     const [query, setQuery] = useState("");
     const [musics, setMusics] = useState(Music);
-    const [playlist, setPlaylist] = useState(PlaylistData);
+    const [playlist, setPlaylist] = useState([]);
     const [searchCount, setSearchCount] = useState(0);
 
     const addToPlaylist = (music) => {
@@ -135,12 +138,74 @@ function LogoMedium() {
 }
 
 function Search({ onSearch }) {
+    const [query, setQuery] = useState("");
+
+
+    // return (
+    //     <input
+    //         className="h-10 px-5 rounded-md bg-zinc-700 text-sm tracking-wide"
+    //         type="text"
+    //         placeholder="Search songs"
+    //         onChange={onSearch}
+    //     />
+    // )
+
+    const [accessToken, setAccessToken] = useState("");
+
+    useEffect(() => {
+        var authParameters = {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: "grant_type=client_credentials&client_id=" +
+                CLIENT_ID +
+                "&client_secret=" +
+                CLIENT_SECRET,
+        };
+
+        fetch("https://accounts.spotify.com/api/token", authParameters)
+            .then((res) => res.json())
+            // .then(data => console.log(data.access_token))
+            .then((data) => setAccessToken(data.access_token));
+
+        console.log(accessToken);
+
+    }, []);
+
+    async function search(query) {
+        console.log("Searching for " + query);
+
+        var trackParameters = {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: "Bearer " + accessToken,
+            },
+        };
+
+        var tracks = await fetch(
+            "https://api.spotify.com/v1/search?q=" + query + "&type=track&limit=50",
+            trackParameters
+        )
+            .then((res) => res.json())
+            .then((data) => console.log(data));
+
+        console.log();
+
+
+    }
+
+
     return (
         <input
             className="h-10 px-5 rounded-md bg-zinc-700 text-sm tracking-wide"
             type="text"
             placeholder="Search songs"
-            onChange={onSearch}
+            onKeyDown={(e) => {
+                if (e.key === "Enter") search(e.target.value)
+            }}
+        // onChange={onSearch}
         />
     )
 }

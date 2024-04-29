@@ -1,4 +1,4 @@
-const PlaylistData = [
+const Playlist = [
     {
         id: 2,
         title: "Bohemian Rhapsody",
@@ -22,4 +22,27 @@ const PlaylistData = [
     },
 ];
 
-export default PlaylistData;
+let PlaylistData = [];
+
+
+
+async function fetchData() {
+    const PlaylistData = Playlist;
+
+    // const result = await fetch('https://jsonplaceholder.typicode.com/todos');
+
+    // const data = await result.json();
+
+    // console.log(data);
+
+
+
+
+
+    // console.log('test');
+    return (PlaylistData)
+};
+
+// function App()
+
+export default fetchData;
